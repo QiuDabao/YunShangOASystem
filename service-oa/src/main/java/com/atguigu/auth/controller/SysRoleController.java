@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class SysRoleController {
         return Result.ok(sysRoleService.list());
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysRole.list')")
     @ApiOperation("条件分页查询")
     @GetMapping("{page}/{limit}")
     public Result pageQueryRole(@PathVariable Long page,//当前页码
@@ -66,6 +68,7 @@ public class SysRoleController {
         //3.查询
         return Result.ok(sysRoleService.page(pageParam,wrapper));
     }
+    @PreAuthorize("hasAuthority('bnt.sysRole.add')")
     @ApiOperation("添加角色")
     @PostMapping ("save")
     public Result save(@RequestBody SysRole sysRole){
@@ -76,14 +79,14 @@ public class SysRoleController {
             return Result.fail();
         }
     }
-
+    @PreAuthorize("hasAuthority('bnt.sysRole.list')")
     @ApiOperation("根据id查询")
     @GetMapping  ("get/{id}")
     public Result getById(@PathVariable Long id){
         SysRole role = sysRoleService.getById(id);
         return Result.ok(role);
     }
-
+    @PreAuthorize("hasAuthority('bnt.sysRole.update')")
     @ApiOperation("修改角色")
     @PutMapping ("update")
     public Result update(@RequestBody SysRole sysRole){
@@ -95,13 +98,14 @@ public class SysRoleController {
         }
     }
 
+    @PreAuthorize("hasAuthority('bnt.sysRole.remove')")
     @ApiOperation(value = "删除角色")
     @DeleteMapping("remove/{id}")
     public Result remove(@PathVariable Long id) {
         sysRoleService.removeById(id);
         return Result.ok();
     }
-
+    @PreAuthorize("hasAuthority('bnt.sysRole.remove')")
     @ApiOperation(value = "根据id列表删除")
     @DeleteMapping("batchRemove")
     public Result batchRemove(@RequestBody List<Long> idList) {

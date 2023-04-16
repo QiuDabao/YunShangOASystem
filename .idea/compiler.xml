@@ -17,9 +17,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="common" options="-parameters" />
+      <module name="common" options="" />
       <module name="common-util" options="-parameters" />
-      <module name="guigu-oa-parent" options="-parameters" />
+      <module name="guigu-oa-parent" options="" />
       <module name="model" options="-parameters" />
       <module name="service-oa" options="-parameters" />
       <module name="service-util" options="-parameters" />
