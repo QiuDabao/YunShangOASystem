@@ -33,6 +33,18 @@
     <!--配置dependencyManagement锁定依赖的版本-->
     <dependencyManagement>
         <dependencies>
+            <!--引入activiti的springboot启动器 -->
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring-boot-starter</artifactId>
+                <version>7.1.0.M6</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>mybatis</artifactId>
+                        <groupId>org.mybatis</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!--mybatis-plus 持久层-->
             <dependency>
                 <groupId>com.baomidou</groupId>
