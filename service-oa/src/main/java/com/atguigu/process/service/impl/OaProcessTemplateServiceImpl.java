@@ -4,6 +4,7 @@ import com.atguigu.model.process.ProcessTemplate;
 import com.atguigu.model.process.ProcessType;
 import com.atguigu.process.*;
 import com.atguigu.process.mapper.OaProcessTemplateMapper;
+import com.atguigu.process.service.OaProcessService;
 import com.atguigu.process.service.OaProcessTemplateService;
 import com.atguigu.process.service.OaProcessTypeService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,12 +53,17 @@ public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateM
         return processTemplatePage;
     }
 
+    @Resource
+    private OaProcessService processService;
     @Override
     public void publish(Long id) {
         //修改状态为1
         ProcessTemplate processTemplate = baseMapper.selectById(id);
         processTemplate.setStatus(1);
         baseMapper.updateById(processTemplate);
-        //todo 流程定义部署
+        //流程定义部署
+        if(!StringUtils.isEmpty(processTemplate.getProcessDefinitionPath())){
+            processService.deployByZip(processTemplate.getProcessDefinitionPath());
+        }
     }
 }

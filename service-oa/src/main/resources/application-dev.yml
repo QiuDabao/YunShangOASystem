@@ -16,7 +16,7 @@ spring:
     #    true:表不存在，自动创建（开发使用）
     #    create_drop: 启动时创建，关闭时删除表（测试使用）
     #    drop_create: 启动时删除表,在创建表 （不需要手动关闭引擎）
-#    database-schema-update: true
+    database-schema-update: true
     #监测历史表是否存在，activities7默认不开启历史表
     db-history-used: true
     #none：不保存任何历史数据，流程中这是最高效的
