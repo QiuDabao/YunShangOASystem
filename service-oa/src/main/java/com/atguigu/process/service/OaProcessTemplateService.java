@@ -11,11 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-18
+ * @since 2023-02-14
  */
 public interface OaProcessTemplateService extends IService<ProcessTemplate> {
 
-    IPage<ProcessTemplate> selectPageProcessTemplate(Page<ProcessTemplate> pageParam);
+    //分页查询审批模板，把审批类型对应名称查询
+    IPage<ProcessTemplate> selectPageProcessTempate(Page<ProcessTemplate> pageParam);
 
+    //部署流程定义（发布）
     void publish(Long id);
 }

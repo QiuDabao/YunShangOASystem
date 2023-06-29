@@ -19,7 +19,7 @@ public class CodeGet {
         // 2、全局配置
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("C:\\Users\\86167\\IdeaProjects\\guigu-oa-parent\\service-oa"+"/src/main/java");
+        gc.setOutputDir("C:\\Users\\Administrator\\Desktop\\guigu-oa\\guigu-oa-parent\\service-oa"+"/src/main/java");
 
         gc.setServiceName("%sService");	//去掉Service接口的首字母I
         gc.setAuthor("atguigu");
@@ -31,14 +31,14 @@ public class CodeGet {
         dsc.setUrl("jdbc:mysql://localhost:3306/guigu-oa?serverTimezone=GMT%2B8&useSSL=false");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("510963");
+        dsc.setPassword("root");
         dsc.setDbType(DbType.MYSQL);
         mpg.setDataSource(dsc);
 
         // 4、包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent("com.atguigu");
-        pc.setModuleName("process"); //模块名
+        pc.setModuleName("wechat"); //模块名
         pc.setController("controller");
         pc.setService("service");
         pc.setMapper("mapper");
@@ -47,7 +47,10 @@ public class CodeGet {
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
 
-        strategy.setInclude("oa_process_record");
+        strategy.setInclude("wechat_menu");
+
+        //去掉前缀
+        strategy.setTablePrefix("wechat_");
 
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
 

@@ -11,9 +11,10 @@ import java.util.List;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-18
+ * @since 2023-02-14
  */
 public interface OaProcessTypeService extends IService<ProcessType> {
 
+    //查询所有审批分类和每个分类所有审批模板
     List<ProcessType> findProcessType();
 }

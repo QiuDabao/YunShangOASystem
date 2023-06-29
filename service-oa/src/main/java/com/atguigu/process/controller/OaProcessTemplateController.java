@@ -3,20 +3,19 @@ package com.atguigu.process.controller;
 
 import com.atguigu.common.result.Result;
 import com.atguigu.model.process.ProcessTemplate;
-import com.atguigu.model.process.ProcessType;
 import com.atguigu.process.service.OaProcessTemplateService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
-import org.apache.tomcat.jni.Multicast;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,22 +25,27 @@ import java.util.Map;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-18
+ * @since 2023-02-14
  */
 @RestController
-@RequestMapping("/admin/process/processTemplate")
+@RequestMapping(value = "/admin/process/processTemplate")
 public class OaProcessTemplateController {
-    @Resource
+
+    @Autowired
     private OaProcessTemplateService processTemplateService;
+
+    //分页查询审批模板
     @ApiOperation("获取分页审批模板数据")
     @GetMapping("{page}/{limit}")
     public Result index(@PathVariable Long page,
-                        @PathVariable Long limit){
-        Page<ProcessTemplate> pageParam = new Page<>(page, limit);
-        //分页查询审批模板,把审批类型对应名称查询
-        IPage<ProcessTemplate> pageModel = processTemplateService.selectPageProcessTemplate(pageParam);
+                        @PathVariable Long limit) {
+        Page<ProcessTemplate> pageParam = new Page<>(page,limit);
+        //分页查询审批模板，把审批类型对应名称查询
+        IPage<ProcessTemplate> pageModel =
+                processTemplateService.selectPageProcessTempate(pageParam);
         return Result.ok(pageModel);
     }
+
     //@PreAuthorize("hasAuthority('bnt.processTemplate.list')")
     @ApiOperation(value = "获取")
     @GetMapping("get/{id}")
@@ -74,34 +78,54 @@ public class OaProcessTemplateController {
         return Result.ok();
     }
 
-    //获取上传到classes的文件
-    @ApiOperation("上传流程定义")
+    @ApiOperation(value = "上传流程定义")
     @PostMapping("/uploadProcessDefinition")
-    public Result uploadProcessDefinition(MultipartFile file) throws Exception {
-        String path =ResourceUtils.getURL("classpath:").getPath();
+    public Result uploadProcessDefinition(MultipartFile file) throws FileNotFoundException {
+        //获取classes目录位置
+        String path = new File(ResourceUtils.getURL("classpath:")
+                          .getPath()).getAbsolutePath();
         //设置上传文件夹
         File tempFile = new File(path + "/processes/");
-        if (!tempFile.exists()) {
+        if(!tempFile.exists()) {
             tempFile.mkdirs();
         }
-        String fileName = file.getOriginalFilename();
-        File zipFile = new File(path + "/process/" + fileName);
-        file.transferTo(zipFile);
+        //创建空文件，实现文件写入
+        String filename = file.getOriginalFilename();
+        File zipFile = new File(path + "/processes/" + filename);
+
+        //保存文件
+        try {
+            file.transferTo(zipFile);
+        } catch (IOException e) {
+            return Result.fail();
+        }
+
         Map<String, Object> map = new HashMap<>();
         //根据上传地址后续部署流程定义，文件名称为流程定义的默认key
-        map.put("processDefinitionPath", "processes/" + fileName);
-        map.put("processDefinitionKey", fileName.substring(0, fileName.lastIndexOf(".")));
+        map.put("processDefinitionPath", "processes/" + filename);
+        map.put("processDefinitionKey", filename.substring(0, filename.lastIndexOf(".")));
         return Result.ok(map);
     }
 
-    //部署流程定义
-//    @PreAuthorize("hasAuthority('bnt.processTemplate.publish')")
+    //部署流程定义（发布）
     @ApiOperation(value = "发布")
     @GetMapping("/publish/{id}")
-    public Result publish(@PathVariable Long id){
-        //status == 1 就是已经发布
+    public Result publish(@PathVariable Long id) {
+        //修改模板发布状态 1 已经发布
+        //流程定义部署
         processTemplateService.publish(id);
         return Result.ok();
     }
+
+    public static void main(String[] args) {
+        try {
+            String path = new File(ResourceUtils.getURL("classpath:")
+                    .getPath()).getAbsolutePath();
+            System.out.println(path);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 

@@ -19,11 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
+
     private RedisTemplate redisTemplate;
+
     public TokenAuthenticationFilter(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -31,9 +34,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain chain)
-            throws IOException, ServletException {
-        logger.info("uri:"+request.getRequestURI());
+                                    FilterChain chain) throws ServletException, IOException {
         //如果是登录接口，直接放行
         if("/admin/system/index/login".equals(request.getRequestURI())) {
             chain.doFilter(request, response);
@@ -50,30 +51,29 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        // token置于header里
+        //请求头是否有token
         String token = request.getHeader("token");
-//        logger.info("token:"+token);
-        if (!StringUtils.isEmpty(token)) {
+        if(!StringUtils.isEmpty(token)) {
             String username = JwtHelper.getUsername(token);
-//            logger.info("username:"+username);
-            if (!StringUtils.isEmpty(username)) {
-                //将用户信息放到ThreadLocal里面
+            if(!StringUtils.isEmpty(username)) {
+                //当前用户信息放到ThreadLocal里面
                 LoginUserInfoHelper.setUserId(JwtHelper.getUserId(token));
                 LoginUserInfoHelper.setUsername(username);
+
                 //通过username从redis获取权限数据
                 String authString = (String)redisTemplate.opsForValue().get(username);
-                //获取的权限数据转换成要求的格式List<SimpleGrantedAuthority>
-                if (!StringUtils.isEmpty(authString)) {
-                    List<Map> mapList = JSON.parseArray(authString, Map.class);
-                    System.out.println(mapList);
+                //把redis获取字符串权限数据转换要求集合类型 List<SimpleGrantedAuthority>
+                if(!StringUtils.isEmpty(authString)) {
+                    List<Map> maplist = JSON.parseArray(authString, Map.class);
+                    System.out.println(maplist);
                     List<SimpleGrantedAuthority> authList = new ArrayList<>();
-                    for(Map map:mapList){
-                        String authority = (String) map.get("authority");
+                    for (Map map:maplist) {
+                        String authority = (String)map.get("authority");
                         authList.add(new SimpleGrantedAuthority(authority));
                     }
-                    return new UsernamePasswordAuthenticationToken(username, null, authList);
-                }else {
-                    return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                    return new UsernamePasswordAuthenticationToken(username,null, authList);
+                } else {
+                    return new UsernamePasswordAuthenticationToken(username,null, new ArrayList<>());
                 }
             }
         }

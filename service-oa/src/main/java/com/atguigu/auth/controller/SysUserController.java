@@ -3,17 +3,18 @@ package com.atguigu.auth.controller;
 
 import com.atguigu.auth.service.SysUserService;
 import com.atguigu.common.result.Result;
+import com.atguigu.common.utils.MD5;
 import com.atguigu.model.system.SysUser;
+import com.atguigu.vo.system.AssginRoleVo;
 import com.atguigu.vo.system.SysUserQueryVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * <p>
@@ -21,14 +22,22 @@ import javax.annotation.Resource;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-03
+ * @since 2023-02-02
  */
 @Api(tags = "用户管理接口")
 @RestController
 @RequestMapping("/admin/system/sysUser")
 public class SysUserController {
-    @Resource
+
+    @Autowired
     private SysUserService service;
+
+    @ApiOperation(value = "更新状态")
+    @GetMapping("updateStatus/{id}/{status}")
+    public Result updateStatus(@PathVariable Long id, @PathVariable Integer status) {
+        service.updateStatus(id,status);
+        return Result.ok();
+    }
 
     //用户条件分页查询
     @ApiOperation("用户条件分页查询")
@@ -39,22 +48,16 @@ public class SysUserController {
         //创建page对象
         Page<SysUser> pageParam = new Page<>(page,limit);
 
-        //封装条件，判断条件值不为空
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
-        //获取条件值
         String username = sysUserQueryVo.getKeyword();
         String createTimeBegin = sysUserQueryVo.getCreateTimeBegin();
         String createTimeEnd = sysUserQueryVo.getCreateTimeEnd();
-        //判断条件值不为空
-        //like 模糊查询
         if(!StringUtils.isEmpty(username)) {
             wrapper.like(SysUser::getUsername,username);
         }
-        //ge 大于等于
         if(!StringUtils.isEmpty(createTimeBegin)) {
             wrapper.ge(SysUser::getCreateTime,createTimeBegin);
         }
-        //le 小于等于
         if(!StringUtils.isEmpty(createTimeEnd)) {
             wrapper.le(SysUser::getCreateTime,createTimeEnd);
         }
@@ -74,8 +77,10 @@ public class SysUserController {
     @ApiOperation(value = "保存用户")
     @PostMapping("save")
     public Result save(@RequestBody SysUser user) {
-        //加密
-        //懒得加了
+        //密码进行加密，使用MD5
+        String passwordMD5 = MD5.encrypt(user.getPassword());
+        user.setPassword(passwordMD5);
+
         service.save(user);
         return Result.ok();
     }
@@ -93,11 +98,6 @@ public class SysUserController {
         service.removeById(id);
         return Result.ok();
     }
-    @ApiOperation(value = "更新状态")
-    @GetMapping("updateStatus/{id}/{status}")
-    public Result updateStatus(@PathVariable Long id, @PathVariable Integer status) {
-        service.updateStatus(id, status);
-        return Result.ok();
-    }
+
 }
 

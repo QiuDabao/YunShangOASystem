@@ -14,8 +14,10 @@ import org.apache.ibatis.annotations.Param;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-19
+ * @since 2023-02-14
  */
 public interface OaProcessMapper extends BaseMapper<Process> {
-    public IPage<ProcessVo> selectPage(Page<ProcessVo>pageParam,@Param("vo") ProcessQueryVo processQueryVo);
+
+    //审批管理列表
+    IPage<ProcessVo> selectPage(Page<ProcessVo> pageParam, @Param("vo") ProcessQueryVo processQueryVo);
 }

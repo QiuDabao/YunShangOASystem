@@ -1,6 +1,5 @@
 package com.atguigu.common.result;
 
-import com.atguigu.common.result.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

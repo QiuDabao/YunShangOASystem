@@ -7,10 +7,11 @@ import com.atguigu.process.service.OaProcessTypeService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,32 +20,31 @@ import java.util.List;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-18
+ * @since 2023-02-14
  */
 @RestController
-@RequestMapping("/admin/process/processType")
+@RequestMapping(value = "/admin/process/processType")
 public class OaProcessTypeController {
-    @Resource
+
+    @Autowired
     private OaProcessTypeService processTypeService;
 
-    //所有审批分类
-    @ApiOperation("查询所有审批分类")
+    //查询所有审批分类
     @GetMapping("findAll")
-    public Result findAll(){
+    public Result findAll() {
         List<ProcessType> list = processTypeService.list();
         return Result.ok(list);
     }
 
-    @ApiOperation("获取分页列表")
+    @ApiOperation(value = "获取分页列表")
     @GetMapping("{page}/{limit}")
     public Result index(@PathVariable Long page,
-                        @PathVariable Long limit){
+                        @PathVariable Long limit) {
         Page<ProcessType> pageParam = new Page<>(page,limit);
         IPage<ProcessType> pageModel = processTypeService.page(pageParam);
         return Result.ok(pageModel);
     }
 
-    @PreAuthorize("hasAuthority('bnt.processType.list')")
     @ApiOperation(value = "获取")
     @GetMapping("get/{id}")
     public Result get(@PathVariable Long id) {
@@ -52,7 +52,6 @@ public class OaProcessTypeController {
         return Result.ok(processType);
     }
 
-    @PreAuthorize("hasAuthority('bnt.processType.add')")
     @ApiOperation(value = "新增")
     @PostMapping("save")
     public Result save(@RequestBody ProcessType processType) {
@@ -60,7 +59,6 @@ public class OaProcessTypeController {
         return Result.ok();
     }
 
-    @PreAuthorize("hasAuthority('bnt.processType.update')")
     @ApiOperation(value = "修改")
     @PutMapping("update")
     public Result updateById(@RequestBody ProcessType processType) {
@@ -68,13 +66,11 @@ public class OaProcessTypeController {
         return Result.ok();
     }
 
-//    @PreAuthorize("hasAuthority('bnt.processType.remove')")
     @ApiOperation(value = "删除")
     @DeleteMapping("remove/{id}")
     public Result remove(@PathVariable Long id) {
         processTypeService.removeById(id);
         return Result.ok();
     }
-
 }
 

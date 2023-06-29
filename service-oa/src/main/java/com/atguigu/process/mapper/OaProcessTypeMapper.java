@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author atguigu
- * @since 2023-04-18
+ * @since 2023-02-14
  */
 public interface OaProcessTypeMapper extends BaseMapper<ProcessType> {
 
