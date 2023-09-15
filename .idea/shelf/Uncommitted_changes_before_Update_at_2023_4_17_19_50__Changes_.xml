@@ -1,0 +1,24 @@
+<changelist name="Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]" date="1681732250350" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 2023/4/17 19:50 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="common/common-util/target/classes/com/atguigu/common/result/ResultCodeEnum.class" />
+    <option name="AFTER_PATH" value="common/common-util/target/classes/com/atguigu/common/result/ResultCodeEnum.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]/ResultCodeEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="common/spring-security/target/classes/com/atguigu/security/config/WebSecurityConfig.class" />
+    <option name="AFTER_PATH" value="common/spring-security/target/classes/com/atguigu/security/config/WebSecurityConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]/WebSecurityConfig.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="service-oa/target/classes/com/atguigu/auth/service/SysUserService.class" />
+    <option name="AFTER_PATH" value="service-oa/target/classes/com/atguigu/auth/service/SysUserService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]/SysUserService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="service-oa/target/classes/com/atguigu/auth/service/impl/SysUserServiceImpl.class" />
+    <option name="AFTER_PATH" value="service-oa/target/classes/com/atguigu/auth/service/impl/SysUserServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_4_17_19_50_[Changes]/SysUserServiceImpl.class" />
+  </binary>
+</changelist>
